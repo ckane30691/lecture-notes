@@ -564,12 +564,12 @@ This text will go right-to-left.
 
 ---
 
-What is an optional closing tag?
+## What is an optional closing tag?
 * Some tags such as <br\> and <a\> are self closing and therefor don't require closing tags
 
 ---
 
-Why do you need doctype at the beginning of your HTML document?
+## Why do you need doctype at the beginning of your HTML document?
 
 * The HTML syntax of HTML5 requires a DOCTYPE to be specified to ensure that the browser renders the page in standards mode vs Quirks Mode. The DOCTYPE has no other purpose and is therefore optional for XML. Documents with an XML media type are always handled in standards mode. [DOCTYPE]
 
@@ -578,14 +578,14 @@ Why do you need doctype at the beginning of your HTML document?
 
 ---
 
-When you zoom in on your browser and the page gets bigger, what exactly happens?
+## When you zoom in on your browser and the page gets bigger, what exactly happens?
 
 * Zooming as implemented in modern browsers consists of nothing more than “stretching up” pixels. That is, the width of the element is not changed from 128 to 256 pixels; instead the actual pixels are doubled in size. Formally, the element still has a width of 128 CSS pixels, even though it happens to take the space of 256 device pixels.
 
 * In other words, zooming to 200% makes one CSS pixel grow to four times the size of one device pixels. (Two times the width, two times the height, yields four times in total).
 ---
 
-What does the ``` <details> ``` tag do?
+## What does the ``` <details> ``` tag do?
 
 ---
 
