@@ -72,7 +72,7 @@ Pay attention to your code style!  Lines shouldn't extend past 80 chars.  Use cl
 * Be persistent - NEVER GIVE UP!
 
 Note:
-We'll dive more into the exact process for white-boarding in a later video but generally you should start by clarifying the problem and testing I/O as well as edge cases.  Then you're going to formulate your approaches.  After you've gotten a few approaches worked out you'll pick the best one and pseudocode it - very high level almost english explanation of what you're about to do.  Important to write it down.  Then you'll implement it, walk the interviewer through an example input, and finally provide the Big O analysis of the algorithm you wrote.  If there's any time remaining you should spend it attempting to further optimize your implementation.
+Ok let's dive into the technique for solving whiteboarding questions in an onsite. Generally you should start by clarifying the problem and testing I/O as well as edge cases.  Then you're going to formulate your approaches.  After you've gotten a few approaches worked out you'll pick the best one and pseudocode it - very high level almost english explanation of what you're about to do.  Important to write it down.  Then you'll implement it, walk the interviewer through an example input, and finally provide the Big O analysis of the algorithm you wrote.  If there's any time remaining you should spend it attempting to further optimize your implementation.
 
 ---
 
