@@ -11,32 +11,38 @@ https://www.destroyallsoftware.com/talks/wat
 Note:
 Today's goal is become more comfortable with talking about JS, it's parts, and some of it's features, as a whole.
 Anything specific that anyone would like to go over?
----
-### How do we describe JavaScript?
-Note: What is JavaScript?
----
-## JavaScript is
-a high level interpreted programming language. It is:
-* Dynamic (it can execute many common behaviors at runtime rather than having to be compiled)
-* Weakly Typed (types are not declared or firmly adhered to making things like type coercion possible)
-* Prototype-Based (OOP style based on sharing behavior through objects or 'prototypes')
-* Multi-paradigm (permits the use of different programming paradigms)
-* Single-threaded (it can only execute one action at any given time)
-* Concurrent (capable of delegating multiple tasks simultaneously)*
-* Never Blocking (What would be blocking?) (I/O does not interfere with user input and activity)
 
+---
+
+## JavaScript is
+#### a high level interpreted programming language.
+* Dynamic
+* Weakly Typed
+* Prototype-Based
+* Multi-paradigm
+* Single-threaded
+* Concurrent
+* Never Blocking
+Note:
+Dynamic (it can execute many common behaviors at runtime rather than having to be compiled)
+Weakly Typed (types are not declared or firmly adhered to making things like type coercion possible)
+Prototype-Based (OOP style based on sharing behavior through objects or 'prototypes')
+Multi-paradigm (permits the use of different programming paradigms)
+Single-threaded (it can only execute one action at any given time)
+Concurrent (capable of delegating multiple tasks simultaneously)*
+Never Blocking (What would be blocking?) (I/O does not interfere with user input and activity)
 How can it be concurrent and single threaded??? We'll get to that.
 
 ---
 
 ##  Concurrent Vs Parallel
-
+note: https://takuti.me/note/parallel-vs-concurrent/
 ---
 
-![](https://s3.us-east-2.amazonaws.com/job-search-temp/parallel-v-concurrent.png)
+![](https://cdn-images-1.medium.com/max/1600/1*ylONk4ex9q6IK68C6USRBg.jpeg)
 
 Note:
-Which term did we use to describe JS before? How does JavaScript execute code concurrently?
+example: node requests & DB calls
 ---
 
 ## The JavaScript Engine
@@ -50,7 +56,7 @@ interprets your JS code and turns it into runnable commands.
 * **JavaScript Runtime Environemnt**:
 supports your JavaScript by providing it with common objects and ways to communicate with the world outside your code
 Note:
-These two things make up the JS we use everyday.
+
 ---
 Which pieces belong to which parts?
 
@@ -66,7 +72,7 @@ console.log('hi');
 setTimeout(cb1, 0);
 console.log('bye');
 ```
----
+
 
 ![](https://camo.githubusercontent.com/df1ee9824df5f259718375500bdc2cbdca148934/68747470733a2f2f63646e2d696d616765732d312e6d656469756d2e636f6d2f6d61782f3830302f312a546f7a53726b6b39326c38686f3664384a7871465f772e676966)
 ---
@@ -80,40 +86,83 @@ What does synchronous mean?
 * Promises, setTimeouts, ect.
 Note:
 The combination of callbacks and promises on top of the task queue and event loop are what give us asynchronicity in JS.
+
 ---
 ## What is a callback in JavaScript?
+note: Lets go over a quick definition 
 ---
+
 ### **Callback:**
-a function passed into another function as an argument <br> which is then invoked inside the outer function to complete some kind of routine or action.
+a function passed into another function as an argument <br> which is then invoked inside the second function to complete some kind of routine or action.
 note:
-way of excicuting code after some other stuff has finished
+
 lets look at an example
+
 ---
-Asynchronous:
-```javascript
-function cb(number) {
-    console.log(number);
-}
-waitAndCall(cb);
-function waitAndCall(callback) {
-    setTimeout(
-        () => callback(number),
-        1000
-    );
-}
-```
----
+
 Synchronous:
 ```javascript
-function cb(number) {
+function log(number) {
     console.log(number);
 }
-callAsap(cb);
-function callAsap(callback) {
-    callback(number);
+
+function callAsap(callback, msg) {
+    callback(msg);
 }
+
+callAsap(log, "Yay callbacks");
 ```
-Note: Who thinks this is sync
+
+---
+
+Also Synchronous:
+```javascript
+function log(number) {
+    console.log(number);
+}
+
+function callAsapLoop(callback, msg, loops) {
+    for(let i = 0; i < loops; i++) {
+        callback(msg);
+    }
+}
+
+callAsapLoop(log, "Yay callbacks", 100);
+
+console.log("after loop")
+```
+---
+
+Asynchronous:
+```javascript
+function log(msg) {
+  console.log(msg);
+}
+
+function waitAndCall(callback, msg, waitTime) {
+  setTimeout(() => callback(msg), waitTime);
+}
+
+waitAndCall(log, "After waiting 1000ms", 1000);
+```
+---
+
+Also Asynchronous:
+```javascript
+function log(msg) {
+  console.log(msg);
+}
+
+function waitAndCall(callback, msg, waitTime) {
+  setTimeout(() => callback(msg), waitTime);
+}
+
+waitAndCall(log, "After waiting 1000ms", 1000);
+
+console.log("end of file");
+```
+note: now that we understand Asynchronous
+change 1000 ms to 0ms
 ---
 ## What is a promise in JavaScript?
 ---
@@ -122,39 +171,94 @@ an object that represents the eventual completion (or failure) of an asynchronou
 Note:
 Promises allow us to wait for asynchronous code and then execute other code upon completion.
 ---
+Custom promise
 ```javascript
-let p1 = new Promise( function(resolve, reject) {
-    console.log("starting promise");
-    console.log("passing arg to .then");
-    resolve("arg1");
+let quickPromise = new Promise( (resolve, reject) => {
+    console.log("inside promise constructor");
+    resolve("resolution argument");
 });
-p1.then( a => {
-    console.log(".then invoked. Argument: " + a);
-} );
+
+quickPromise.then( arg => {
+    console.log(".then invoked. Argument: " + arg);
+});
+```
+---
+Custom 1 second promise:
+```javascript
+let slowPromise = new Promise( (resolve, reject) => {
+    console.log("inside promise constructor");
+    setTimeout(() => resolve("resolution argument"), 1000);
+});
+
+slowPromise.then( arg => {
+    console.log(".then invoked. Argument: " + arg);
+});
+
 console.log("After .then");
 ```
-Note: What will this log? ...why?
+---
+Goal: <br/>
+Make an api call that uses
+<br/>the result from previous api calls
+```javascript
+function makeSlowPromise(resArg) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => resolve(resArg), 1000);
+  });
+}
+
+let fakeAPI = makeSlowPromise;
+
+fakeAPI("res - 1").then(res1 => {
+    console.log(res1);
+    fakeAPI(res1 + " - 2").then(res2 => {
+        console.log(res2);
+        fakeAPI(res2 + " - 3").then(res3 => {
+            console.log(res3);
+        });
+    });
+});
+```
+---
+With Promise chaining
+
+```javascript
+function makeSlowPromise(resArg) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => resolve(resArg), 1000);
+  });
+}
+
+let fakeAPI = makeSlowPromise;
+
+fakeAPI("res - 1").then(res1 => {
+    console.log(res1);
+    return fakeAPI(res1 + " - 2")
+}).then(res2 => {
+    console.log(res2);
+    return fakeAPI(res2 + " - 3")
+}).then(res3 => {
+    console.log(res3);
+});
+
+```
 ---
 # What is hoisting?
-Note: Ask for examples.
+Note:
+Ask for examples.
 ---
 ### Hoisting:
 * Hoisting is JavaScript's default behavior of moving all _**declarations**_ to the top of the current scope (ie: current script or function).
 Note:
 What is a declaration?  Vs assignment/initialization?
+
 ---
 
-* A function declaration is when you declare a function using the keyword function.  Function declarations are hoisted to the top of the file.
-
-* A function expression is when you store a function in a variable - var x = function (a, b) {return a * b};
-
-* After a function expression has been stored in a variable, the variable can be used as a function. Functions stored in variables do not need function names. They are always invoked (called) using the variable name.
----
 Example:
 ```javascript
 function doStuff() {
     console.log(a);
-
+    
     var a = "now I exist";
     console.log(a);
 }
@@ -167,13 +271,6 @@ What are they?
 how are they different from objects?
 pass by value vs pass by reference:
     pass by ref = pass the pointer
----
-
-* When a parameter is passed by reference, the caller and the callee use the same variable for the parameter. If the callee modifies the parameter variable, the effect is visible to the caller's variable.  Ie. You’re mutating the actual object
-
-* When a parameter is passed by value, the caller and callee have two independent variables with the same value. If the callee modifies the parameter variable, the effect is not visible to the caller. Ie. You’re mutating a copy of the primitive
-
-
 ---
 * ### string
 * ### number
@@ -190,11 +287,9 @@ What about `"string".length` and so on...
 String.prototype.returnMe = function() {
     return this;
 }
-
+ 
 a = "abc";
 b = "abc".returnMe();
-// hmmmm...
-// lets look at the console
 ```
 ---
 # Random Trivia
@@ -216,20 +311,15 @@ b = "abc".returnMe();
 * ""
 * document.all
 ---
-## What is the value of `x`?
-```javascript
-var y = 1, x = y = typeof x
-```
----
 ## What is the difference between null and undefined?
-
-* undefined means a variable has been declared but has not yet been assigned a value. On the other hand, null is an assignment value. It can be assigned to a variable as a representation of no value. Also, undefined and null are two distinct types: undefined is a type itself (undefined) while null is an object
-
-
 ---
 ## What is the value of this inside of a setTimeout function?
-
-* This will be set to the window or global scope unless you use a fat arrow function which will preserve the scope from the outer function.
+note:
+```JavaScript
+setTimeout(function () {
+	console.log(this);
+}, 500)
+```
 ---
 ## What is the Value of this inside of a constructor function?
 * Object is created before the constructor is run, When we invoke the keyword new, this becomes set to the instance of the new object.  The __proto__ of the new object is then set to the prototype of the constructor function.  __proto__ is just a pointer that JS is going to use to climb the prototype chain.
@@ -564,12 +654,12 @@ This text will go right-to-left.
 
 ---
 
-What is an optional closing tag?
+## What is an optional closing tag?
 * Some tags such as <br\> and <a\> are self closing and therefor don't require closing tags
 
 ---
 
-Why do you need doctype at the beginning of your HTML document?
+## Why do you need doctype at the beginning of your HTML document?
 
 * The HTML syntax of HTML5 requires a DOCTYPE to be specified to ensure that the browser renders the page in standards mode vs Quirks Mode. The DOCTYPE has no other purpose and is therefore optional for XML. Documents with an XML media type are always handled in standards mode. [DOCTYPE]
 
@@ -578,14 +668,14 @@ Why do you need doctype at the beginning of your HTML document?
 
 ---
 
-When you zoom in on your browser and the page gets bigger, what exactly happens?
+## When you zoom in on your browser and the page gets bigger, what exactly happens?
 
 * Zooming as implemented in modern browsers consists of nothing more than “stretching up” pixels. That is, the width of the element is not changed from 128 to 256 pixels; instead the actual pixels are doubled in size. Formally, the element still has a width of 128 CSS pixels, even though it happens to take the space of 256 device pixels.
 
 * In other words, zooming to 200% makes one CSS pixel grow to four times the size of one device pixels. (Two times the width, two times the height, yields four times in total).
 ---
 
-What does the ``` <details> ``` tag do?
+## What does the ``` <details> ``` tag do?
 
 ---
 
